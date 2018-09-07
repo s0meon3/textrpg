@@ -1,0 +1,125 @@
+#ainda não está pronto
+#feito por gabriel corrêa
+
+import random
+
+try:
+    class character:
+        def __init__(self, name, hp, tothp, atack, defense, critical):
+            self.name = name
+            self.hp = hp
+            self.atack = atack
+            self.defense = defense
+            self.tothp = tothp
+            self.critical = critical
+        def __str__(self):
+            return self.name
+
+    enemie = ''
+    pname = str(input('Qual o nome do nosso herói? '))
+    points = 50
+    print(f'Você tem {points} pontos e pode gastar em hp, ataque,´chance de critico e defesa')
+    while True:
+        tothp = int(input(f'Hp: (você tem {points} pontos).'))
+        if tothp > points or tothp < 0:
+            print('Insira um número válido.')
+        else:
+            points -= tothp
+            break
+    while True:
+        atack = int(input(f'Atack: (você tem {points} pontos).'))
+        if atack > points or atack < 0:
+            print('Insira um número válido.')
+        else:
+            points -= atack
+            break
+
+    while True:
+        defense = int(input(f'Defesa: (você tem {points} pontos).'))
+        if defense > points or defense < 0:
+            print('Insira um número válido.')
+        else:
+            points -= defense
+            break
+    while True:
+        critical = int(input(f'Critico: (voce tem {points} pontos).'))
+        if critical > points or critical < 0:
+            print('Insira um número válido.')
+        else:
+            points -=critical
+            break
+    hp = tothp
+    player = character(pname, hp, tothp, atack, defense, critical)
+    kills = 0
+    turno = 'a'
+    # INIMIGOS
+    goblin = character('Goblin', 20, 20, 15, 7, 3)
+    porcoselvagem = character('Porco Selvagem', 25, 25, 14, 10, 5 )
+    zumbi = character('Zumbi', 25, 25, 20, 5, 10)
+    dragao = character('Dragão', 35, 35, 20,  10, 10)
+    gigante = character('Gigante', 45, 45, 15, 20, 15)
+    inimigosfaceis = [goblin, porcoselvagem, zumbi]
+
+    # LUTA
+    while True:
+        if len(inimigosfaceis) != 0:
+            enemie = random.choice(inimigosfaceis)
+            inimigosfaceis.remove(enemie)
+            print(f'{player.name} irá enfrentar {enemie}!')
+            while True:
+                if turno == 'a':
+                    chance = random.randint(0, 100)
+                    if chance <= 15:
+                        print(f'{player.name} errou o ataque!')
+                        turno = 'b'
+                    elif 15 < chance < 100-player.critical:
+                        damage = player.atack - enemie.defense/2
+                        enemie.hp -= damage
+                        if enemie.hp <= 0:
+                            print(f'{player.name} deu {damage} de dano nele!')
+                            print('{player.name} ganhou!\n')
+                            player.hp = player.tothp
+                            break
+                        else:
+                            print(f'{player.name} deu {damage} de dano em {enemie.name}, agora ele tem {enemie.hp} de vida.')
+                            turno = 'b'
+
+                    elif 100-player.critical < chance:
+                        damage = player.atack*1.5
+                        enemie.hp -= damage
+                        print('ATAQUE CRÍTICO!')
+                        if enemie.hp <= 0:
+                            print('{player.name} ganhou!\n')
+                            player.hp = player.tothp
+                            break
+                        else:
+                            print(f'{player.name} deu {damage} de dano em {enemie.name}, agora ele tem {enemie.hp} de vida.')
+                            turno = 'b'
+                else:
+                    chance = random.randint(0, 100)
+                    if chance <= 15:
+                        print(f'{enemie.name} errou!')
+                        turno = 'a'
+                    elif 15 < chance < 100-enemie.critical:
+                        damage = enemie.atack - player.defense / 2
+                        player.hp -= damage
+                        if player.hp <= 0:
+                            print(f'{enemie.name} ganhou, ele deu {damage} de dano em ...\n')
+                            print(f'Infelizmente a jornada de {player.name} acabou.')
+                            exit()
+                        else:
+                            print(f'{enemie.name} deu {damage} de dano em {player.name}, agora {player.name} tem {player.hp} de vida.')
+                            turno = 'a'
+
+                    elif 100-player.critical<chance:
+                        damage = enemie.atack * 1.5
+                        player.hp -= damage
+                        if player.hp <= 0:
+                            print(f'{enemie.name} ganhou!\n')
+                            print(f'Infelizmente a jornada de {player.name} acabou.')
+                            exit()
+                        else:
+                            print(f'{enemie.name} deu {damage} de dano em {player.name}, agora ele tem {player.hp} de vida.')
+                            turno = 'a'
+except:
+    print('Algo deu errado, reiniciando programa...')
