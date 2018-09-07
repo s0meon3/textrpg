@@ -1,2 +1,2 @@
 # textrpg
-rpg de texto
+RPG de texto em python3
